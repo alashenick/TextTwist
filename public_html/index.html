@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="myStyle.css">
+  </head>
+  <body>
+    <h1> Text Twist </h1>
+    <h2> by Amanda Lashenick </h2>
+    
+    <form id="nameForm" onkeydown="return event.key != 'Enter';">
+    <label>Enter name:</label> <br>
+    <input type="text" name="user-name" id="user-name" placeholder="Type your name here.">
+    <button type="button" id="nameBtn">Submit.</button>
+    <p id="welcome-msg"> <span id= "my-name"> </span></p>
+    </form>
+    <br> <br>
+    <form action="api.php" method="post" id="myForm" onkeydown="return event.key != 'Enter';">
+    <label>Input:</label> <br>
+    <input type="text" name="user-rack" id="user-rack" placeholder="Type your rack here.">
+    <button type="button" id="submitBtn">Show my words.</button>
+    </form>
+
+    <p id="container"> Or.... </p>
+    <button id="grabmore">Show words from a random rack.</button>
+    <p> My rack: <span id="my-rack"> </span></p>
+    <p> My words: <span id="my-words"> </span></p>
+    <ul id="bingos">
+    </ul>
+  </body>
+  <script>
+    $(document).ready(function(){
+        let displayRack = function(myRack) { 
+             $('#my-rack').text(myRack.rack);
+        };
+        let displayWords = function(myRack) { 
+             var stringData = (JSON.stringify(myRack.results));//.replace(/\"/g, " ");
+             $('#my-words').text(stringData);
+        };
+        var userRack = $("#user-rack").val();
+        
+        $("#nameBtn").click(function(){
+            //var userName = $("user-name").val();
+            $("nameForm").submit();
+            var userName = $("#user-name").val();
+            $('#my-name').text('Welcome to the game, '+userName+'!');
+        });
+        $("#submitBtn").click(function(){
+            var userRack = $("#user-rack").val();
+            $("#myForm").submit($('#my-rack').text(userRack));
+            $.ajax({
+            method: "POST",
+            url: "api.php",
+            data: {'user-rack': userRack},
+            success: function(data) {
+                stringData = (JSON.stringify(data.results)).replace(/\"/g, " ");
+                $('#my-words').text(stringData);
+            }
+            });
+        });
+
+      $("#grabmore").on("click", function(){
+        $.ajax({
+            method: "GET",
+            url: "api.php",
+            success: function (data) {
+                $('#my-rack').text(data.rack);
+                stringData = (JSON.stringify(data.results)).replace(/\"/g, " ");
+                $('#my-words').text(stringData);
+            }
+        });
+      });
+    });
+  </script>
+</html>
