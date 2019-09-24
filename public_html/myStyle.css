@@ -8,12 +8,17 @@ h1 {
   font-size: 55px;
 }
 
+h3 {
+  font-family: "Century Gothic";
+  color: #91219E;
+  font-size: 20px;
+}
+
 h2 {
   font-family: "Century Gothic";
-  font-style: italic;
-  
   font-size: 30px;
 }
+
 
 p {
   font-family: "Century Gothic";
@@ -27,7 +32,7 @@ span {
 }
 
 form {
-  display: inline;
+  font-weight: bold;
   margin-right:20px;
 }
 
