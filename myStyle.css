@@ -1,0 +1,80 @@
+body {
+  background-color: #F5F5F5;
+  font-style: normal;
+}
+
+h1 {
+  font-family: "Rockwell";
+  font-size: 55px;
+}
+
+h3 {
+  font-family: "Century Gothic";
+  color: #91219E;
+  font-size: 20px;
+}
+
+h2 {
+  font-family: "Century Gothic";
+  font-size: 30px;
+}
+
+
+p {
+  font-family: "Century Gothic";
+  font-size: 20px;
+  color: black ;
+  font-style: normal;
+}
+
+span {
+    color: blue;
+}
+
+form {
+  font-weight: bold;
+  margin-right:20px;
+}
+
+#container {
+  display: inline;
+  margin-left:20px;
+  margin-right:20px;
+}
+
+label {
+  font-family: "Century Gothic";
+  font-size: 20px;
+  color: black ;
+}
+
+input {
+  font-family: "Century Gothic";
+  font-size: 16px;
+  color: black ;
+  padding: 10px;
+}
+
+::placeholder {
+  font-style: italic;
+}
+
+button {
+  font-family: "Rockwell";
+  background-color: #D15FEE ;
+  border: none;
+  color: white;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #91219E ;
+  color: white;
+  outline-style: solid;
+  outline-color: white;
+  outline-width: thick;
+}
