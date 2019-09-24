@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="myStyle.css">
+  </head>
+  <body>
+    <h1> Text Twist </h1>
+    <h2> by Amanda Lashenick </h2>
+    <h3> Enter a 7-letter rack or generate a random rack. <br>
+    Then submit guesses of words found within the letters in the rack to earn points. </h3>
+    
+    <form id="nameForm" onkeydown="return event.key != 'Enter';">
+    <label>Enter name:</label> <br>
+    <input type="text" name="user-name" id="user-name" placeholder="Type your name here.">
+    <button type="button" id="nameBtn">Submit.</button>
+    <button type="button" id="resetBtn">Reset.</button>
+    <p id="welcome-msg"> <span id= "my-name"> </span></p>
+    </form>
+    
+    <br> <br>
+    
+    <form action="api.php" method="post" id="myForm" onkeydown="return event.key != 'Enter';">
+    <label>Input 7-letter rack:</label> <br>
+    <input type="text" name="user-rack" id="user-rack" placeholder="Type your rack here.">
+    <button type="button" id="submitBtn">Submit my rack.</button>
+    <p id="container"> Or.... </p>
+    <button type="button" id="grabmore">Generate a random rack.</button>
+    </form>
+    
+    <p> My rack: <span id="my-rack"> </span></p>
+
+    <br>
+    
+    <form action="api.php" method="post" id="myGuesses" onkeydown="return event.key != 'Enter';">
+    <label>Enter a word guess:</label> <br>
+    <input type="text" name="user-guesses" id="user-guesses" placeholder="Type your guesses here.">
+    <button type="button" id="guessesBtn">Submit guess.</button>
+    </form>
+    
+    <p> <span id="points-msg"> </span></p>
+    <p> Words found: <span id="my-guesses"> </span></p>
+    <p> Total points: <span id="my-points"> </span></p>
+    
+  </body>
+  <script>
+    $(document).ready(function(){
+        let setRack = function() {
+            var currRack = $('#my-rack').text();
+            localStorage.setItem('currRack', currRack);
+        };
+        
+        var getRack = function() {
+            return localStorage.getItem('currRack');
+        };
+        
+        let setGuessesFound = function() {
+            var currGuess = $('#my-guesses').text();
+            localStorage.setItem('currGuess', currGuess);
+        };
+        
+        var getGuessesFound = function() {
+            return localStorage.getItem('currGuess');
+        };
+        
+        $("#nameBtn").click(function(){
+            $("nameForm").submit();
+            var userName = $("#user-name").val();
+            $('#my-name').text('Welcome to the game, '+userName+'!');
+        });
+        
+        $("#submitBtn").click(function(){
+            var userRack = $("#user-rack").val();
+            $("#myForm").submit($('#my-rack').text(userRack));
+            $.ajax({
+            method: "POST",
+            url: "api.php",
+            data: {'user-rack': userRack},
+            success: function(data) {
+                setRack();
+                $("#points-msg").text(" ");
+                $("#my-guesses").text(" ");
+                setGuessesFound();
+            }
+            });
+        });
+        
+        $("#resetBtn").click(function(){
+            $.ajax({
+            method: "POST",
+            url: "api.php",
+            data: {'reset': true},
+            success: function(data) {
+                //removeCookie("PHPSESSID");
+                $('#my-rack').text(" ");
+                setRack();
+                $("#points-msg").text(" ");
+                $("#my-guesses").text(" ");
+                setGuessesFound();
+                $('#my-points').text(" ");
+            }
+            });
+        });
+        
+        $("#guessesBtn").click(function(){
+            var userGuess = $("#user-guesses").val();
+            var thisRack = getRack();
+            $("#myGuesses").submit(function(e) {
+               e.preventDefault();
+            });
+            $.ajax({
+            method: "POST",
+            url: "api.php",
+            data: {'user-guesses': userGuess,'user-rack':thisRack},
+            success: function(data) {
+                setGuessesFound();
+                guessesFound = getGuessesFound();
+                stringGuess = (data.guess);
+                if (stringGuess != "") {
+                    $("#my-points").text(data.total_points);
+                    $("#points-msg").text("Congrats, your guess of "+stringGuess+" has earned you "+data.this_points+" points.");
+                    if (guessesFound != " ") {
+                        $("#my-guesses").append(", "+stringGuess);
+                    } else {
+                        $("#my-guesses").append(stringGuess);
+                    }
+                } else {
+                    $("#points-msg").text("No points, guess again.");
+                }
+                setGuessesFound();
+            }
+            });
+        });
+      $("#grabmore").on("click", function(){
+        $.ajax({
+            method: "GET",
+            url: "api.php",
+            success: function (data) {
+                $('#my-rack').text(data.rack);
+                setRack();
+                $("#points-msg").text(" ");
+                $("#my-guesses").text(" ");
+                setGuessesFound();
+            }
+        });
+      });
+    });
+  </script>
+</html>
