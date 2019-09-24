@@ -71,6 +71,13 @@ button {
   font-size: 16px;
 }
 
+#resetBtn {
+  background-color: #4cbb17;
+}
+#resetBtn:hover {
+  background-color: #3a8e11;
+}
+
 button:hover {
   background-color: #91219E ;
   color: white;
